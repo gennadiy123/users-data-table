@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { fetchUsers } from "../../redux/reducer";
-import { data } from "./mockData";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllUsers, addOneUser } from "../../redux/middleware";
 import { TableRow } from "./TableRow";
 import {
   StyledTable,
@@ -10,45 +8,49 @@ import {
   StyledHeader,
   HeaderCell,
   ButtonAdd,
+  CreatePerson,
+  StyledInput,
+  SubmitButton,
+  CancelButton,
 } from "./Table.styles";
-import { setUsers } from "../../redux/reducer";
-
-
-// const url = "https://64234be5001cb9fc203ca00b.mockapi.io/users-data";
-
-// const getUsersData = async () => {
-//     const result = await axios.get(url).then(response => response.data)
-//     console.log('result', result)
-//     return result
-// }
 
 export const Table = () => {
-    const users = useSelector((state) => state.users);
-    console.log('users', users)
+  const [newPerson, setNewPerson] = useState(false);
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.users);
 
-    const dispatch = useDispatch();
-    // dispatch(setUsers(data));
-  // const data = getUsersData().then(data => {return data})
-  // getUsersData()
-  // console.log('data', data)
+  const addPerson = () => {
+    setNewPerson(true);
+  };
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, [newPerson]);
+
+  const handleSubmit = (e) => {
     
-    // useEffect(() => {
-    //     const getUsersData = async () => {
-    //         await axios
-    //           .get(url)
-    //           .then((response) => response.data)
-    //           .then((result) => getUsersData(result));
-    //     }
-    //     console.log('getUserData', getUsersData())
-    //   dispatch(getUsersData());
-    // //   dispatch(setIsRewardUpdated(false));
-    // }, []);
+    e.preventDefault();
+    const data = new FormData(e.target);
 
-    // useEffect(() => {
-    //     console.log('useEffect')
-    //     dispatch(fetchUsers());
-    //     console.log("useEffect2");
-    // }, [dispatch]);
+    const name = data.get("name");
+    const age = data.get("age");
+    const aboutPerson = data.get("about person");
+    dispatch(addOneUser({ name, age, aboutPerson }));
+
+    for (const key of data.keys()) {
+      e.target[key].value = "";
+    }
+
+    setNewPerson(false);
+  };
+
+  const onCancel = () => {
+    setNewPerson(false);
+  };
 
   return (
     <TableWrapper>
@@ -63,7 +65,7 @@ export const Table = () => {
           </StyledHeader>
         </thead>
         <tbody>
-          {data.map((item) => (
+          {users.map((item) => (
             <TableRow
               key={item.id}
               name={item.name}
@@ -74,7 +76,40 @@ export const Table = () => {
           ))}
         </tbody>
       </StyledTable>
-      <ButtonAdd>Add new person</ButtonAdd>
+      {newPerson && (
+        <>
+          <CreatePerson onSubmit={handleSubmit}>
+            <StyledInput
+              required
+              placeholder="name"
+              type="text"
+              name="name"
+              defaultValue=""
+            />
+
+            <StyledInput
+              required
+              placeholder="age"
+              type="number"
+              name="age"
+              defaultValue=""
+              min="1"
+              max="150"
+            />
+
+            <StyledInput
+              required
+              placeholder="about person"
+              type="text"
+              name="about person"
+              defaultValue=""
+            />
+            <SubmitButton>Submit</SubmitButton>
+            <CancelButton onClick={onCancel}>Cancel</CancelButton>
+          </CreatePerson>
+        </>
+      )}
+      <ButtonAdd onClick={addPerson}>Add new person</ButtonAdd>
     </TableWrapper>
   );
 };

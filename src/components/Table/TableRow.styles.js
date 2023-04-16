@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components";
+import styled, { css } from "styled-components";
 
 const sharedStyle = css`
   border-radius: 20px;
@@ -33,19 +33,25 @@ export const InputAboutPerson = styled.input`
   width: 660px;
 `;
 
-export const ButtonSave = styled.button`
+export const SaveButton = styled.button`
   margin-right: 10px;
   ${sharedStyle}
   background-color: #59b31d;
 `;
 
-export const ButtonEdit = styled.button`
+export const CancelButton = styled.button`
+  margin-right: 10px;
+  ${sharedStyle}
+  background-color: #ebb134;
+`;
+
+export const EditButton = styled.button`
   margin-right: 10px;
   ${sharedStyle}
   background-color: #3b9bdb;
 `;
 
-export const ButtonDelete = styled.button`
+export const DeleteButton = styled.button`
   ${sharedStyle}
   background-color: #d95959;
 `;

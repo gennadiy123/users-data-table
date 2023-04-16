@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "../../redux/actions";
+import { removeUser, changeOneUser } from "../../redux/middleware";
 import {
   StyledTableRow,
   TableRowCells,
-  InputName,
-  InputAge,
-  InputAboutPerson,
-  ButtonSave,
-  ButtonEdit,
-  ButtonDelete,
+  SaveButton,
+  CancelButton,
+  EditButton,
+  DeleteButton,
 } from "./TableRow.styles";
 
 export const TableRow = ({ name, age, aboutPerson, id }) => {
   const [pressedEdit, setPressedEdit] = useState("");
+  const [inputName, setInputName] = useState(name);
+  const [inputAge, setInputAge] = useState(age);
+  const [inputAboutPerson, setInputAboutPerson] = useState(aboutPerson);
 
   const dispatch = useDispatch();
 
@@ -22,21 +23,34 @@ export const TableRow = ({ name, age, aboutPerson, id }) => {
   };
 
   const onPressSave = () => {
+    dispatch(
+      changeOneUser({
+        id: id,
+        name: inputName,
+        age: inputAge,
+        "about-person": inputAboutPerson,
+      })
+    );
     setPressedEdit("");
   };
 
-  const onDeleteUser = () => {
-    dispatch(deleteUser(id));
+  const onPressCancel = () => {
+    setPressedEdit("");
   };
 
-  const OnChangeForm = () => {
-    return (
-      <form>
-        <input type="text" name="name" value={name} />
-        <input type="text" name="age" value={age} />
-        <input type="text" name="about person" value={aboutPerson} />
-      </form>
-    );
+  const onDeleteUser = (id) => {
+    dispatch(removeUser(id));
+  };
+
+  const changeName = (event) => {
+    setInputName(event.target.value);
+  };
+
+  const changeAge = (event) => {
+    setInputAge(event.target.value);
+  };
+  const changeAboutPerson = (event) => {
+    setInputAboutPerson(event.target.value);
   };
 
   return (
@@ -44,16 +58,31 @@ export const TableRow = ({ name, age, aboutPerson, id }) => {
       <StyledTableRow>
         {pressedEdit ? (
           <>
-            {/* <TableRowCells>
-              <InputName type="text" placeholder={name} />
-            </TableRowCells>
-            <TableRowCells>
-              <InputAge type="text" placeholder={age} />
-            </TableRowCells>
-            <TableRowCells>
-              <InputAboutPerson type="text" placeholder={aboutPerson} />
-            </TableRowCells> */}
-            <OnChangeForm />
+            <td width="240px">
+              <input
+                max-width="240px"
+                type="text"
+                name="name"
+                value={inputName}
+                onChange={changeName}
+              />
+            </td>
+            <td width="14%">
+              <input
+                type="text"
+                name="age"
+                value={inputAge}
+                onChange={changeAge}
+              />
+            </td>
+            <td width="36%">
+              <input
+                type="text"
+                name="about-person"
+                value={inputAboutPerson}
+                onChange={changeAboutPerson}
+              />
+            </td>
           </>
         ) : (
           <>
@@ -62,13 +91,20 @@ export const TableRow = ({ name, age, aboutPerson, id }) => {
             <TableRowCells>{aboutPerson}</TableRowCells>
           </>
         )}
-        <TableRowCells>
+        <TableRowCells width="20%">
           {pressedEdit ? (
-            <ButtonSave onClick={() => onPressSave()}>Save</ButtonSave>
+            <>
+              <SaveButton onClick={() => onPressSave()}>Save</SaveButton>
+              <CancelButton onClick={onPressCancel}>Cancel</CancelButton>
+            </>
           ) : (
-            <ButtonEdit onClick={() => onPressedEdit(id)}>Edit</ButtonEdit>
+            <>
+              <EditButton onClick={() => onPressedEdit(id)}>Edit</EditButton>
+              <DeleteButton onClick={() => onDeleteUser(id)}>
+                Delete
+              </DeleteButton>
+            </>
           )}
-          <ButtonDelete onClick={() => onDeleteUser()}>Delete</ButtonDelete>
         </TableRowCells>
       </StyledTableRow>
     </>
