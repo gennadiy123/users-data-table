@@ -1,6 +1,7 @@
 {
   "name": "users-data-table",
   "version": "0.1.0",
+  "homepage": "https://gennadiy123.github.io/users-data-table",
   "private": true,
   "dependencies": {
     "@redux-devtools/extension": "^3.2.5",
@@ -9,6 +10,7 @@
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
     "axios": "^1.3.4",
+    "gh-pages": "^5.0.0",
     "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
