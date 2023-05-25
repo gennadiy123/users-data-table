@@ -1,7 +1,7 @@
 {
   "name": "users-data-table",
   "version": "0.1.0",
-  "homepage": "https://gennadiy123.github.io/users-data-table",
+  "homepage": "https://gennadiy123.github.io/users-data-table/public",
   "private": true,
   "dependencies": {
     "@redux-devtools/extension": "^3.2.5",
